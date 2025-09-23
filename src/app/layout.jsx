@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
     <html lang="pt-BR">
       <body
         className={`${montserrat.variable} ${poppins.variable} ${cormorantGaramond.variable} antialiased`}
+        cz-shortcut-listen="true"
       >
         {children}
       </body>
