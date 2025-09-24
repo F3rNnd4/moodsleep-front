@@ -8,6 +8,16 @@ export default function SobreMim() {
       <Header />
 
       <main className={styles.main}>
+        <div className={styles.sunImage}>
+          <Image
+            src="/images/sol.png"
+            alt="Sol"
+            width={400}
+            height={400}
+            className={styles.decorativeImage}
+          />
+        </div>
+        
         <section className={styles.profileCard}>
           <h1 className={styles.title}>Sobre Mim</h1>
           <div className={styles.avatar}>
@@ -32,17 +42,27 @@ export default function SobreMim() {
             bem-estar e na organização do dia a dia.
           </p>
           <div className={styles.links}>
-            <a href="#" className={styles.link}>
+            <a href="https://www.linkedin.com/in/fernanda-alves-louro-386966320" className={styles.link} target="_blank" rel="noopener noreferrer">
               📖 LinkedIn
             </a>
-            <a href="#" className={styles.link}>
+            <a href="https://github.com/F3rNnd4" className={styles.link} target="_blank" rel="noopener noreferrer">
               💻 GitHub
             </a>
-            <a href="#" className={styles.link}>
+            <a href="mailto:fernanda.louro@aluno.senai.br" className={styles.link} target="_blank" rel="noopener noreferrer">
               📧 E-mail
             </a>
           </div>
         </section>
+        
+        <div className={styles.moonImage}>
+          <Image
+            src="/images/lua-cheia.png"
+            alt="Lua"
+            width={380}
+            height={380}
+            className={styles.decorativeImage}
+          />
+        </div>
       </main>
 
       <footer className={styles.footer}>

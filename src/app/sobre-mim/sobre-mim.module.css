@@ -3,6 +3,7 @@
   background: linear-gradient(135deg, #F1F3F9 0%, #FFFFFF 100%);
   position: relative;
   overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .main {
@@ -10,6 +11,8 @@
   justify-content: center;
   align-items: center;
   padding: 4rem 2rem;
+  position: relative;
+  min-height: calc(100vh - 200px);
 }
 
 .profileCard {
@@ -19,6 +22,8 @@
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   max-width: 600px;
+  position: relative;
+  z-index: 10;
   margin-top: 3rem;
 }
 
@@ -87,10 +92,39 @@
   color: #7A5AF8;
 }
 
+.sunImage {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  z-index: 1;
+}
+
+.moonImage {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 380px;
+  height: 380px;
+  z-index: 1;
+}
+
+.decorativeImage {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  object-fit: contain;
+  width: 100% !important;
+  height: auto !important;
+}
+
 .footer {
   text-align: center;
   padding: 2rem;
   font-family: var(--font-poppins);
   font-size: 0.9rem;
   color: #666666;
+  position: relative;
+  z-index: 10;
 }
