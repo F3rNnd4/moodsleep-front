@@ -17,16 +17,16 @@ export default function Header() {
         </div>
 
         <nav className={styles.nav}>
-          <a href="#" className={styles.navLink}>
+          <a href="/" className={styles.navLink}>
             Home
           </a>
           <a href="/sobre-mim" className={styles.navLink}>
             Sobre mim
           </a>
-          <a href="#" className={styles.navLink}>
+          <a href="/cadastro" className={styles.navLink}>
             Cadastro
           </a>
-          <a href="#" className={styles.navLink}>
+          <a href="/login" className={styles.navLink}>
             Login
           </a>
         </nav>
