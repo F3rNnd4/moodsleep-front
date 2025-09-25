@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styles from "./login.module.css";
 
 export default function Login() {
   return (
     <div className={styles.container}>
+      <Header />
       <div className={styles.sunImage}>
         <Image
           src="/images/sol.png"
