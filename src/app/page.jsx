@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -66,11 +67,9 @@ export default function Home() {
             </p>
           </div>
         </section>
-        
-        <footer className={styles.footer}>
-          <p>MoodSleep Tracker © 2025 - Conexão e Saúde</p>
-        </footer>
       </main>
+      
+      <Footer />
     </div>
   );
 }

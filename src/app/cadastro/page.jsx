@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Footer from "../components/Footer";
 import styles from "./cadastro.module.css";
 
 export default function Cadastro() {
@@ -56,6 +57,8 @@ export default function Cadastro() {
           </form>
         </section>
       </main>
+      
+      <Footer />
     </div>
   );
 }

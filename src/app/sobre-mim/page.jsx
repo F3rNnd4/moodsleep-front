@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import styles from "./sobre-mim.module.css";
 
 export default function SobreMim() {
@@ -65,9 +66,7 @@ export default function SobreMim() {
         </div>
       </main>
 
-      <footer className={styles.footer}>
-        <p>MoodSleep Tracker © 2025 – Fernanda Alves</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

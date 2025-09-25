@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Footer from "../components/Footer";
 import styles from "./login.module.css";
 
 export default function Login() {
@@ -51,6 +52,8 @@ export default function Login() {
           </form>
         </section>
       </main>
+      
+      <Footer />
     </div>
   );
 }

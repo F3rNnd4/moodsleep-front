@@ -147,16 +147,6 @@
   line-height: 1.6;
 }
 
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 2rem;
-  color: #444444;
-  font-family: var(--font-poppins);
-  font-size: 0.9rem;
-}
-
-
 .sunImage {
   position: absolute;
   top: -50px;
