@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Image from "next/image";
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -27,8 +27,8 @@ export default function Home() {
             </p>
             
             <div className={styles.buttons}>
-              <button className={styles.primaryButton}>Criar conta</button>
-              <button className={styles.secondaryButton}>Entrar</button>
+              <a href="/cadastro" className={styles.primaryButton}>Criar conta</a>
+              <a href="/login" className={styles.secondaryButton}>Entrar</a>
             </div>
           </div>
 

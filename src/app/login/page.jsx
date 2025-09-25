@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/Header/Header";
+import Footer from "../components/Footer/Footer";
 import styles from "./login.module.css";
 
 export default function Login() {
