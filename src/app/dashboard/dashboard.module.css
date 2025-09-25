@@ -117,7 +117,7 @@
 }
 
 .moodButton.selected {
-  background: linear-gradient(135deg, #AEA2FC, #FFD700);
+  background: #AEA2FC;
   border-color: #AEA2FC;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(174, 162, 252, 0.3);
@@ -151,7 +151,7 @@
 }
 
 .submitButton {
-  background: linear-gradient(135deg, #FFD700 0%, #AEA2FC 100%);
+  background: #FFD700;
   border: none;
   border-radius: 12px;
   padding: 1rem 2rem;
@@ -179,38 +179,32 @@
 /* Elementos decorativos */
 .moonImage {
   position: absolute;
-  bottom: -100px;
-  left: -100px;
-  width: 250px;
-  height: 250px;
+  bottom: -72px;
+  left: -20px;
+  width: 350px;
+  height: 350px;
   z-index: 1;
 }
 
-.moonCircle {
+.moonImage img {
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 30% 30%, #E6E6FA, #D8BFD8, #DDA0DD);
-  border-radius: 50%;
-  opacity: 0.7;
-  filter: blur(1px);
+  object-fit: contain;
 }
 
 .sunImage {
   position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 200px;
-  height: 200px;
+  top: -100px;
+  right: -30px;
+  width: 400px;
+  height: 400px;
   z-index: 1;
 }
 
-.sunCircle {
+.sunImage img {
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500, #FF8C00);
-  border-radius: 50%;
-  opacity: 0.8;
-  filter: blur(1px);
+  object-fit: contain;
 }
 
 /* Responsividade */

@@ -48,14 +48,13 @@ export default function Dashboard() {
 
   return (
     <div className={styles.container}>
-      <Header />
       
       <div className={styles.moonImage}>
-        <div className={styles.moonCircle}></div>
+        <img src="/images/lua-cheia.png" alt="Lua" />
       </div>
       
       <div className={styles.sunImage}>
-        <div className={styles.sunCircle}></div>
+        <img src="/images/sol.png" alt="Sol" />
       </div>
 
       <main className={styles.main}>
@@ -68,7 +67,7 @@ export default function Dashboard() {
 
         <section className={styles.registryCard}>
           <h2 className={styles.cardTitle}>
-            🌙 Registre seu bem-estar <span className={styles.sparkle}>✨</span>
+             Registre seu bem-estar <span className={styles.sparkle}></span>
           </h2>
           
           <form onSubmit={handleSubmit} className={styles.form}>
