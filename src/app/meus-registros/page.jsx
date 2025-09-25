@@ -5,6 +5,18 @@ import Footer from "../components/Footer/Footer";
 import styles from "./meus-registros.module.css";
 
 export default function MeusRegistros() {
+  // Função para obter a cor baseada no humor
+  const getHumorColor = (humorId) => {
+    const cores = {
+      1: '#E57373', // Bravo - Rosa suave (harmonia com roxo)
+      2: '#B39DDB', // Triste - Lilás claro (harmonia com #AEA2FC)
+      3: '#D1C4E9', // Neutro - Roxo muito claro
+      4: '#FFD700', // Feliz - Amarelo do projeto
+      5: '#AEA2FC'  // Apaixonado - Roxo principal do projeto
+    };
+    return cores[humorId] || '#D1C4E9';
+  };
+
   // Dados mockados - em produção viriam da API
   const [registros] = useState([
     {
@@ -164,7 +176,6 @@ export default function MeusRegistros() {
 
   return (
     <div className={styles.container}>
-      <Header />
       
       <div className={styles.sunImage}>
         <img
@@ -301,8 +312,15 @@ export default function MeusRegistros() {
             </div>
           ) : (
             registrosFiltrados.map(registro => (
-              <div key={registro.id} className={styles.recordCard}>
-                <div className={styles.recordDate}>
+              <div 
+                key={registro.id} 
+                className={styles.recordCard}
+                style={{ borderLeft: `4px solid ${getHumorColor(registro.humor.id)}` }}
+              >
+                <div 
+                  className={styles.recordDate}
+                  style={{ backgroundColor: getHumorColor(registro.humor.id) }}
+                >
                   {formatarData(registro.data)}
                 </div>
                 <div className={styles.recordContent}>
