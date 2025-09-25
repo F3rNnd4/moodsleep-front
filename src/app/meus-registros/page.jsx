@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./meus-registros.module.css";
@@ -312,34 +313,39 @@ export default function MeusRegistros() {
             </div>
           ) : (
             registrosFiltrados.map(registro => (
-              <div 
-                key={registro.id} 
-                className={styles.recordCard}
-                style={{ borderLeft: `4px solid ${getHumorColor(registro.humor.id)}` }}
+              <Link
+                key={registro.id}
+                href={`/meus-registros/${registro.id}`}
+                className={styles.recordLink}
               >
                 <div 
-                  className={styles.recordDate}
-                  style={{ backgroundColor: getHumorColor(registro.humor.id) }}
+                  className={styles.recordCard}
+                  style={{ borderLeft: `4px solid ${getHumorColor(registro.humor.id)}` }}
                 >
-                  {formatarData(registro.data)}
-                </div>
-                <div className={styles.recordContent}>
-                  <div className={styles.recordMood}>
-                    <span className={styles.moodEmoji}>{registro.humor.emoji}</span>
-                    <span className={styles.moodLabel}>{registro.humor.label}</span>
+                  <div 
+                    className={styles.recordDate}
+                    style={{ backgroundColor: getHumorColor(registro.humor.id) }}
+                  >
+                    {formatarData(registro.data)}
                   </div>
-                  <div className={styles.recordSleep}>
-                    <span className={styles.sleepIcon}>😴</span>
-                    <span className={styles.sleepValue}>{registro.sono}</span>
-                  </div>
-                  {registro.observacoes && (
-                    <div className={styles.recordNotes}>
-                      <span className={styles.notesLabel}>Observações:</span>
-                      <span className={styles.notesText}>{registro.observacoes}</span>
+                  <div className={styles.recordContent}>
+                    <div className={styles.recordMood}>
+                      <span className={styles.moodEmoji}>{registro.humor.emoji}</span>
+                      <span className={styles.moodLabel}>{registro.humor.label}</span>
                     </div>
-                  )}
+                    <div className={styles.recordSleep}>
+                      <span className={styles.sleepIcon}>😴</span>
+                      <span className={styles.sleepValue}>{registro.sono}</span>
+                    </div>
+                    {registro.observacoes && (
+                      <div className={styles.recordNotes}>
+                        <span className={styles.notesLabel}>Observações:</span>
+                        <span className={styles.notesText}>{registro.observacoes}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))
           )}
         </section>

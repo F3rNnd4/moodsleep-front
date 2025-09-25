@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: linear-gradient(135deg, #F1F3F9 0%, #FFFFFF 100%);
   position: relative;
   overflow-x: hidden;
   display: flex;
@@ -160,6 +160,20 @@
 .recordCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Link que envolve o card */
+.recordLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.recordLink:focus .recordCard,
+.recordLink:hover .recordCard {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
 }
 
 .recordDate {
