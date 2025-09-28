@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import Header from "../components/Header/Header";
+import Link from "next/link";
+import Image from "next/image";
+import HeaderDashboard from "../components/HeaderDashboard";
 import Footer from "../components/Footer/Footer";
 import styles from "./dashboard.module.css";
 
@@ -48,6 +50,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.container}>
+      <HeaderDashboard currentPage="dashboard" />
       
       <div className={styles.moonImage}>
         <img src="/images/lua-cheia.png" alt="Lua" />

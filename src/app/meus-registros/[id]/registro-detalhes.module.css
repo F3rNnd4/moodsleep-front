@@ -11,10 +11,10 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 2rem 1rem;
+  padding: 2rem 2rem;
   position: relative;
   z-index: 10;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   width: 100%;
 }
@@ -22,6 +22,7 @@
 .headerSection {
   text-align: center;
   margin-bottom: 2rem;
+  margin-top: 4rem;
   position: relative;
 }
 
@@ -31,7 +32,7 @@
   top: 0;
   background: #AEA2FC;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.75rem 1.25rem;
   font-family: var(--font-poppins);
   font-weight: 500;
@@ -65,22 +66,27 @@
 /* Card principal */
 .detailsCard {
   background: rgba(255, 255, 255, 0.98);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: visible;
-  box-shadow: 0 24px 60px rgba(30, 30, 60, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   margin: 0 auto 2.5rem auto;
-  border-left: 8px solid #AEA2FC;
-  width: 680px;
+  border-left: 6px solid #AEA2FC;
+  width: 100%;
+  max-width: 900px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .cardHeader {
-  padding: 0.6rem 2rem;
+  background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+  padding: 1rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 64px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  height: 70px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
 }
 
 .dateInfo {
@@ -89,16 +95,17 @@
 
 .dateDay {
   font-family: var(--font-poppins);
-  font-weight: 600;
+  font-weight: 700;
   color: #333;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .cardContent {
-  padding: 2.25rem 2.5rem 2.75rem 2.5rem;
+  padding: 2.5rem 3rem 3rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 /* Seções */
@@ -135,11 +142,12 @@
 .moodDisplay {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  padding: 1.25rem 1.5rem;
-  background: #fbfbff;
-  border-radius: 12px;
-  border: 1px solid #f0f0f5;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #fbfbff 0%, #f8f9ff 100%);
+  border-radius: 16px;
+  border: 1px solid #e8e9ff;
+  box-shadow: 0 4px 15px rgba(174, 162, 252, 0.1);
 }
 
 .moodEmoji {
@@ -171,11 +179,12 @@
 .sleepDisplay {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: #f8f9ff;
-  border-radius: 12px;
-  border: 2px solid #f0f0f0;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+  border-radius: 16px;
+  border: 1px solid #d4edda;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
 }
 
 .sleepIcon {
@@ -191,11 +200,12 @@
 
 /* Anotações */
 .notesContent {
-  padding: 1.25rem 1.5rem;
-  background: #fbfbff;
-  border-radius: 12px;
-  border: 1px solid #f0f0f5;
-  line-height: 1.6;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+  border-radius: 16px;
+  border: 1px solid #ffeaa7;
+  line-height: 1.7;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1);
 }
 
 .notesContent p {
@@ -232,49 +242,73 @@
   box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
 }
 
-/* Ações no estilo do mock */
+/* Ações dos botões */
 .actionRow {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.indicatorDot {
-  width: 8px;
-  height: 8px;
-  background: #ff4b4b;
-  border-radius: 50%;
-  margin: 0 auto 1.25rem auto;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
 }
 
 .backSmall {
   background: #AEA2FC;
   border: none;
   color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 20px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(174,162,252,0.18);
+  font-family: var(--font-poppins);
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(174, 162, 252, 0.3);
+}
+
+.backSmall:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(174, 162, 252, 0.4);
 }
 
 .editButton {
   background: #FFD700;
   border: none;
-  padding: 0.85rem 1.6rem;
-  border-radius: 18px;
+  color: #333;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 700;
-  box-shadow: 0 8px 20px rgba(255,215,0,0.18);
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+  flex: 0 0 auto;
+}
+
+.editButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }
 
 .deleteButton {
   background: #FF6B6B;
   border: none;
-  padding: 0.6rem 1rem;
+  color: white;
+  padding: 0.75rem 1.5rem;
   border-radius: 12px;
   cursor: pointer;
-  color: white;
+  font-family: var(--font-poppins);
+  font-weight: 400;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.deleteButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 107, 107, 0.4);
+  background: #FF5252;
 }
 
 /* Centralizar o card e ajustar margens */
@@ -345,7 +379,18 @@
   }
   
   .cardContent {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .detailsCard {
+    margin: 0 1rem 2rem 1rem;
+    max-width: none;
+  }
+  
+  .moodDisplay,
+  .sleepDisplay,
+  .notesContent {
+    padding: 1.25rem 1.5rem;
   }
   
   .moodDisplay,
@@ -361,6 +406,30 @@
   
   .navButton {
     max-width: none;
+  }
+  
+  .actionRow {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0;
+  }
+  
+  .editButton {
+    order: 1;
+    width: 100%;
+    padding: 1rem 2rem;
+  }
+  
+  .backSmall {
+    order: 2;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .deleteButton {
+    order: 3;
+    width: 100%;
+    text-align: center;
   }
   
   .moonImage {

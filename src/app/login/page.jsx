@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./login.module.css";
@@ -43,13 +44,13 @@ export default function Login() {
               placeholder="Senha" 
               className={styles.input}
             />
-            
-            <button type="submit" className={styles.submitButton}>
+
+            <Link href="/dashboard" className={styles.submitButton}>
               Entrar
-            </button>
+            </Link>
             
             <p className={styles.signupLink}>
-              Não tem conta? <a href="/cadastro">Cadastre-se aqui</a>
+              Não tem conta? <Link href="/cadastro">Cadastre-se aqui</Link>
             </p>
           </form>
         </section>

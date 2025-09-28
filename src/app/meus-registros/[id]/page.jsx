@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import Header from "../../components/Header/Header";
+import HeaderDashboard from "../../components/HeaderDashboard";
 import Footer from "../../components/Footer/Footer";
 import styles from "./registro-detalhes.module.css";
 
@@ -106,7 +106,7 @@ export default function RegistroDetalhes() {
   if (!registro) {
     return (
       <div className={styles.container}>
-        <Header />
+        <HeaderDashboard currentPage="registros" />
         <main className={styles.main}>
           <div className={styles.loading}>
             <h2>Registro não encontrado</h2>
@@ -125,6 +125,7 @@ export default function RegistroDetalhes() {
 
   return (
     <div className={styles.container}>
+      <HeaderDashboard currentPage="registros" />
       
       <div className={styles.moonImage}>
         <img src="/images/lua-cheia.png" alt="Lua" className={styles.decorativeImage} />
@@ -136,12 +137,6 @@ export default function RegistroDetalhes() {
 
       <main className={styles.main}>
         <section className={styles.headerSection}>
-          <button 
-            onClick={() => router.push('/meus-registros')}
-            className={styles.backButton}
-          >
-            ← Voltar aos registros
-          </button>
           <h1 className={styles.title}>Detalhes do Registro</h1>
           <p className={styles.subtitle}>{formatarData(registro.data)}</p>
         </section>

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import Header from "../components/Header/Header";
+import HeaderDashboard from "../components/HeaderDashboard";
 import Footer from "../components/Footer/Footer";
 import styles from "./meus-registros.module.css";
 
@@ -177,6 +177,7 @@ export default function MeusRegistros() {
 
   return (
     <div className={styles.container}>
+      <HeaderDashboard currentPage="registros" />
       
       <div className={styles.sunImage}>
         <img
@@ -351,9 +352,10 @@ export default function MeusRegistros() {
         </section>
 
         <div className={styles.actionSection}>
-          <button className={styles.newRecordBtn}>
+          <Link className={styles.newRecordBtn}
+            href="/dashboard">
             Registrar novo dia
-          </button>
+          </Link>
         </div>
       </main>
 

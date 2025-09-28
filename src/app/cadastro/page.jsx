@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./cadastro.module.css";
@@ -48,13 +49,13 @@ export default function Cadastro() {
               placeholder="Senha" 
               className={styles.input}
             />
-            
+
             <button type="submit" className={styles.submitButton}>
               Cadastrar
             </button>
             
             <p className={styles.loginLink}>
-              Já tem conta? <a href="/login">Faça login</a>
+              Já tem conta? <Link href="/login">Faça login</Link>
             </p>
           </form>
         </section>
