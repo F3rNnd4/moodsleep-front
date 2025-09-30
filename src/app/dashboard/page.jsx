@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import HeaderDashboard from "../components/HeaderDashboard";
@@ -7,6 +8,7 @@ import Footer from "../components/Footer/Footer";
 import styles from "./dashboard.module.css";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [selectedMood, setSelectedMood] = useState(null);
   const [sleepHours, setSleepHours] = useState("");
   const [notes, setNotes] = useState("");
@@ -45,7 +47,9 @@ export default function Dashboard() {
     setSleepHours("");
     setNotes("");
     
+    // Exibe mensagem de sucesso e redireciona para meus registros
     alert("Registro salvo com sucesso!");
+    router.push("/meus-registros");
   };
 
   return (
