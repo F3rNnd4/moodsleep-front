@@ -103,26 +103,6 @@ export default function RegistroDetalhes() {
     router.push(`/meus-registros/${registrosMock[newIndex].id}`);
   };
 
-  if (!registro) {
-    return (
-      <div className={styles.container}>
-        <HeaderDashboard currentPage="registros" />
-        <main className={styles.main}>
-          <div className={styles.loading}>
-            <h2>Registro não encontrado</h2>
-            <button 
-              onClick={() => router.push('/meus-registros')}
-              className={styles.backButton}
-            >
-              Voltar aos registros
-            </button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className={styles.container}>
       <HeaderDashboard currentPage="registros" />
