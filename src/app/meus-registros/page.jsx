@@ -1,11 +1,87 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import HeaderDashboard from "../components/HeaderDashboard";
 import Footer from "../components/Footer/Footer";
 import styles from "./meus-registros.module.css";
 
 export default function MeusRegistros() {
+  const [registros, setRegistros] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+
+  const fetchRegistros = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(`${apiURL}/register`);
+      if (!response.ok) {
+        // Não lançar: tratamos aqui para mostrar mensagem amigável com status
+        const status = response.status;
+        setError(`Não foi possível carregar os registros (Status ${status}).`);
+        setRegistros([]);
+        return;
+      }
+      const data = await response.json();
+      console.log('🔍 Dados recebidos da API:', data);
+      if (data && data.length > 0) {
+        console.log('📋 Primeiro registro:', data[0]);
+        console.log('🔑 Chaves do primeiro registro:', Object.keys(data[0]));
+      }
+      
+      // Normalizar os dados para o formato esperado
+      const registrosNormalizados = Array.isArray(data) ? data.map(normalizeRegistro) : [];
+      console.log('📝 Registros normalizados:', registrosNormalizados);
+      setRegistros(registrosNormalizados);
+    } catch (err) {
+      console.error("Erro ao buscar registros:", err);
+      setError("Não foi possível carregar os registros. Verifique sua conexão.");
+      setRegistros([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRegistros();
+  }, [apiURL]);
+
+  // Função para normalizar registros da API para formato esperado
+  const normalizeRegistro = (registro) => {
+    // Mapear possíveis campos da API
+    const id = registro.id || registro._id || Math.random();
+    const data = registro.date || registro.data || registro.createdAt || new Date().toISOString();
+    
+    // Mapear humor/mood
+    let humorId = registro.moodLevel || registro.mood || registro.humor?.id || 3;
+    if (typeof humorId === 'string') humorId = parseInt(humorId);
+    
+    const humorEmojis = { 1: '😡', 2: '😔', 3: '😐', 4: '😊', 5: '😍' };
+    const humorLabels = { 1: 'Irritado', 2: 'Triste', 3: 'Neutro', 4: 'Feliz', 5: 'Muito feliz' };
+    
+    // Mapear sono
+    let sono = registro.sleepHours || registro.sono || registro.sleep || registro.horasSono;
+    if (typeof sono === 'number') sono = `${sono}h`;
+    if (!sono || sono === 'undefined') sono = '-';
+    
+    // Mapear observações
+    const observacoes = registro.notes || registro.observacoes || registro.observation || '';
+    
+    return {
+      id,
+      data,
+      sono,
+      observacoes,
+      humor: {
+        id: humorId,
+        emoji: humorEmojis[humorId] || '😐',
+        label: humorLabels[humorId] || 'Neutro'
+      }
+    };
+  };
+
   // Função para obter a cor baseada no humor
   const getHumorColor = (humorId) => {
     const cores = {
@@ -18,51 +94,7 @@ export default function MeusRegistros() {
     return cores[humorId] || '#D1C4E9';
   };
 
-  // Dados mockados - em produção viriam da API
-  const [registros] = useState([
-    {
-      id: 1,
-      data: "2025-09-18",
-      humor: { id: 4, emoji: "😊", label: "Bom humor" },
-      sono: "7h 45min",
-      observacoes: "Dia foi produtivo, consegui descansar bem."
-    },
-    {
-      id: 2,
-      data: "2025-09-17",
-      humor: { id: 4, emoji: "😊", label: "Bom humor" },
-      sono: "8h 10min",
-      observacoes: "Um pouco cansada, mas nada demais."
-    },
-    {
-      id: 3,
-      data: "2025-09-16",
-      humor: { id: 1, emoji: "😡", label: "Irritado" },
-      sono: "4h 30min",
-      observacoes: "Não consegui dormir bem e fiquei estressado."
-    },
-    {
-      id: 4,
-      data: "2025-09-15",
-      humor: { id: 3, emoji: "😐", label: "Neutro" },
-      sono: "6h 20min",
-      observacoes: "Dia normal, nada especial."
-    },
-    {
-      id: 5,
-      data: "2025-09-14",
-      humor: { id: 5, emoji: "😍", label: "Muito feliz" },
-      sono: "8h 30min",
-      observacoes: "Dia incrível! Dormi muito bem."
-    },
-    {
-      id: 6,
-      data: "2025-09-13",
-      humor: { id: 2, emoji: "😔", label: "Triste" },
-      sono: "5h 15min",
-      observacoes: "Dia difícil, problemas no trabalho."
-    }
-  ]);
+  // registros será preenchido pela API (via useEffect)
 
   // Estados dos filtros
   const [filtroData, setFiltroData] = useState("todos");
@@ -141,27 +173,42 @@ export default function MeusRegistros() {
   const estatisticas = useMemo(() => {
     if (registrosFiltrados.length === 0) return { humorMedio: "😐", mediaSono: "0h", diasRegistrados: 0 };
 
-    // Humor mais comum
+    // Humor mais comum (protegendo registros com shape inesperado)
     const contadorHumor = {};
     registrosFiltrados.forEach(r => {
-      const humor = r.humor.id;
-      contadorHumor[humor] = (contadorHumor[humor] || 0) + 1;
+      const humorId = r?.humor?.id;
+      if (typeof humorId === 'number' || typeof humorId === 'string') {
+        const key = String(humorId);
+        contadorHumor[key] = (contadorHumor[key] || 0) + 1;
+      }
     });
-    const humorMaisComum = Object.keys(contadorHumor).reduce((a, b) => 
-      contadorHumor[a] > contadorHumor[b] ? a : b
-    );
-    const humorMedio = humores.find(h => h.id === parseInt(humorMaisComum))?.emoji || "😐";
 
-    // Média de sono
-    const totalSono = registrosFiltrados.reduce((acc, r) => {
-      const horas = parseFloat(r.sono.replace(/[^0-9.]/g, ''));
-      return acc + horas;
-    }, 0);
-    const mediaSono = Math.round((totalSono / registrosFiltrados.length) * 10) / 10;
+    let humorMedio = "😐";
+    const humorKeys = Object.keys(contadorHumor);
+    if (humorKeys.length > 0) {
+      const humorMaisComum = humorKeys.reduce((a, b) => 
+        contadorHumor[a] > contadorHumor[b] ? a : b
+      );
+      humorMedio = humores.find(h => String(h.id) === humorMaisComum)?.emoji || "😐";
+    }
+
+    // Média de sono (soma apenas registros com campo sono válido)
+    const sonoValidos = registrosFiltrados
+      .map(r => {
+        try {
+          return parseFloat(String(r.sono).replace(/[^0-9.]/g, '')) || 0;
+        } catch {
+          return 0;
+        }
+      })
+      .filter(h => !Number.isNaN(h));
+
+    const totalSono = sonoValidos.reduce((acc, h) => acc + h, 0);
+    const mediaSonoNum = sonoValidos.length > 0 ? Math.round((totalSono / sonoValidos.length) * 10) / 10 : 0;
 
     return {
       humorMedio,
-      mediaSono: `${Math.floor(mediaSono)}h ${Math.round((mediaSono % 1) * 60)}min`,
+      mediaSono: `${Math.floor(mediaSonoNum)}h ${Math.round((mediaSonoNum % 1) * 60)}min`,
       diasRegistrados: registrosFiltrados.length
     };
   }, [registrosFiltrados]);
@@ -200,6 +247,23 @@ export default function MeusRegistros() {
       </div>
 
       <main className={styles.main}>
+        {loading && (
+          <div className={styles.centerMessage}>
+            <p>Carregando registros...</p>
+          </div>
+        )}
+        {error && (
+          <div className={styles.centerMessage}>
+            <p className={styles.errorText}>{error}</p>
+            <button 
+              onClick={fetchRegistros}
+              className={styles.retryButton}
+              disabled={loading}
+            >
+              {loading ? 'Carregando...' : 'Tentar novamente'}
+            </button>
+          </div>
+        )}
         <section className={styles.headerSection}>
           <h1 className={styles.title}>Seu histórico de bem-estar</h1>
           <p className={styles.subtitle}>Acompanhe sua evolução de humor e sono ao longo do tempo</p>
@@ -319,33 +383,43 @@ export default function MeusRegistros() {
                 href={`/meus-registros/${registro.id}`}
                 className={styles.recordLink}
               >
-                <div 
-                  className={styles.recordCard}
-                  style={{ borderLeft: `4px solid ${getHumorColor(registro.humor.id)}` }}
-                >
-                  <div 
-                    className={styles.recordDate}
-                    style={{ backgroundColor: getHumorColor(registro.humor.id) }}
-                  >
-                    {formatarData(registro.data)}
-                  </div>
-                  <div className={styles.recordContent}>
-                    <div className={styles.recordMood}>
-                      <span className={styles.moodEmoji}>{registro.humor.emoji}</span>
-                      <span className={styles.moodLabel}>{registro.humor.label}</span>
-                    </div>
-                    <div className={styles.recordSleep}>
-                      <span className={styles.sleepIcon}>😴</span>
-                      <span className={styles.sleepValue}>{registro.sono}</span>
-                    </div>
-                    {registro.observacoes && (
-                      <div className={styles.recordNotes}>
-                        <span className={styles.notesLabel}>Observações:</span>
-                        <span className={styles.notesText}>{registro.observacoes}</span>
+                {(() => {
+                  const humorId = registro?.humor?.id ?? null;
+                  const humorEmoji = registro?.humor?.emoji ?? '😐';
+                  const humorLabel = registro?.humor?.label ?? 'Sem informação';
+                  const sonoText = registro?.sono ?? '-';
+                  const borderColor = getHumorColor(humorId);
+
+                  return (
+                    <div 
+                      className={styles.recordCard}
+                      style={{ borderLeft: `4px solid ${borderColor}` }}
+                    >
+                      <div 
+                        className={styles.recordDate}
+                        style={{ backgroundColor: borderColor }}
+                      >
+                        {formatarData(registro.data)}
                       </div>
-                    )}
-                  </div>
-                </div>
+                      <div className={styles.recordContent}>
+                        <div className={styles.recordMood}>
+                          <span className={styles.moodEmoji}>{humorEmoji}</span>
+                          <span className={styles.moodLabel}>{humorLabel}</span>
+                        </div>
+                        <div className={styles.recordSleep}>
+                          <span className={styles.sleepIcon}>😴</span>
+                          <span className={styles.sleepValue}>{sonoText}</span>
+                        </div>
+                        {registro.observacoes && (
+                          <div className={styles.recordNotes}>
+                            <span className={styles.notesLabel}>Observações:</span>
+                            <span className={styles.notesText}>{registro.observacoes}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </Link>
             ))
           )}

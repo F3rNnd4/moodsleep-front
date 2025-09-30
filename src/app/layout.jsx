@@ -20,7 +20,12 @@ const cormorantGaramond = Cormorant_Garamond({
 
 export const metadata = {
   title: "Mood Sleep Tracker",
-  description: "Projeto Final Individual Full Stack de um monitor de humor e sono."
+  description: "Projeto Final Individual Full Stack de um monitor de humor e sono.",
+  icons: {
+    icon: "/icons/moon-roxo.png",
+    shortcut: "/icons/moon-roxo.png",
+    apple: "/icons/moon-roxo.png",
+  },
 };
 
 export default function RootLayout({ children }) {
