@@ -1,8 +1,10 @@
 .container {
+  /* Full viewport height so page uses document scrollbar */
   min-height: 100vh;
   background: linear-gradient(135deg, #F1F3F9 0%, #FFFFFF 100%);
   position: relative;
-  overflow-x: hidden;
+  /* allow decorative elements to overflow the container without creating a separate scroll */
+  overflow: visible;
   display: flex;
   flex-direction: column;
 }
@@ -299,21 +301,23 @@
 
 /* Elementos decorativos */
 .moonImage {
-  position: absolute;
+  position: fixed;
   left: -60px;
   bottom: -10px;
   width: 320px;
   height: 320px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .sunImage {
-  position: absolute;
+  position: fixed;
   top: -10px;
   right: -50px;
   width: 400px;
   height: 400px;
   z-index: 1;
+  pointer-events: none;
 }
 
 .decorativeImage {

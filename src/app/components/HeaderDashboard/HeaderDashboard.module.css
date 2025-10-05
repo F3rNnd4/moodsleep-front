@@ -74,15 +74,6 @@
   color: #AEA2FC;
 }
 
-.navLink.active {
-  color: #AEA2FC;
-  font-weight: 500;
-}
-
-.navLink.active:after {
-  width: 100%;
-}
-
 @media (max-width: 768px) {
   .container {
     padding: 0 1rem;

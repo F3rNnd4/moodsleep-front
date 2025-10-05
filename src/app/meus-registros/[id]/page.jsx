@@ -1,223 +1,257 @@
 "use client";
-
-import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import HeaderDashboard from "../../components/HeaderDashboard";
-import Footer from "../../components/Footer/Footer";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { api } from "../../../../lib/api";
 import styles from "./registro-detalhes.module.css";
 
-export default function RegistroDetalhes() {
-  const params = useParams();
+export default function DetalhesRegistro() {
   const router = useRouter();
+  const params = useParams();
   const [registro, setRegistro] = useState(null);
-  
-  // Dados mockados - em produção viria da API
-  const registrosMock = [
-    {
-      id: 1,
-      data: "2025-09-18",
-      humor: { id: 4, emoji: "😊", label: "Bom humor" },
-      sono: "7h 45min",
-      observacoes: "Dia foi produtivo, consegui descansar bem. Fiz exercícios pela manhã e isso me ajudou muito com o humor e energia para o resto do dia."
-    },
-    {
-      id: 2,
-      data: "2025-09-17",
-      humor: { id: 4, emoji: "😊", label: "Bom humor" },
-      sono: "8h 10min",
-      observacoes: "Um pouco cansada, mas nada demais. Trabalho foi tranquilo hoje."
-    },
-    {
-      id: 3,
-      data: "2025-09-16",
-      humor: { id: 1, emoji: "😡", label: "Irritado" },
-      sono: "4h 30min",
-      observacoes: "Não consegui dormir bem e fiquei estressado. Problemas no trabalho me deixaram bem irritado."
-    },
-    {
-      id: 4,
-      data: "2025-09-15",
-      humor: { id: 3, emoji: "😐", label: "Neutro" },
-      sono: "6h 20min",
-      observacoes: "Dia normal, nada especial. Rotina comum."
-    },
-    {
-      id: 5,
-      data: "2025-09-14",
-      humor: { id: 5, emoji: "😍", label: "Muito feliz" },
-      sono: "8h 30min",
-      observacoes: "Dia incrível! Dormi muito bem e acordei super disposta. Saí com amigos à noite."
-    },
-    {
-      id: 6,
-      data: "2025-09-13",
-      humor: { id: 2, emoji: "😔", label: "Triste" },
-      sono: "5h 15min",
-      observacoes: "Dia difícil, problemas no trabalho. Me senti bem para baixo hoje."
-    }
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editando, setEditando] = useState(false);
+  const [formData, setFormData] = useState({
+    date: "",
+    moodLevel: 3,
+    sleepHours: 7,
+    notes: ""
+  });
+
+  const humores = [
+    { id: 1, emoji: "😡", label: "Irritado" },
+    { id: 2, emoji: "😔", label: "Triste" },
+    { id: 3, emoji: "😐", label: "Neutro" },
+    { id: 4, emoji: "😊", label: "Feliz" },
+    { id: 5, emoji: "😍", label: "Muito feliz" }
   ];
 
-  // Função para obter a cor baseada no humor
-  const getHumorColor = (humorId) => {
-    const cores = {
-      1: '#E57373', // Bravo - Rosa suave
-      2: '#B39DDB', // Triste - Lilás claro
-      3: '#D1C4E9', // Neutro - Roxo muito claro
-      4: '#FFD700', // Feliz - Amarelo do projeto
-      5: '#AEA2FC'  // Apaixonado - Roxo principal do projeto
-    };
-    return cores[humorId] || '#D1C4E9';
+  useEffect(() => {
+    if (params.id) {
+      buscarRegistro();
+    }
+  }, [params.id]);
+
+  const buscarRegistro = async () => {
+    try {
+      setLoading(true);
+      const response = await api.registers.getById(params.id);
+      
+      if (!response.ok) {
+        throw new Error("Registro não encontrado");
+      }
+      
+      const data = await response.json();
+      setRegistro(data);
+      
+      setFormData({
+        date: data.date.split('T')[0],
+        moodLevel: data.moodLevel,
+        sleepHours: data.sleepHours,
+        notes: data.notes || ""
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const formatarData = (dataString) => {
-    const data = new Date(dataString + 'T00:00:00');
+  const handleDelete = async () => {
+    if (!confirm("Tem certeza que deseja excluir este registro?")) {
+      return;
+    }
+
+    try {
+      const response = await api.registers.delete(params.id);
+      
+      if (!response.ok) {
+        throw new Error("Erro ao excluir registro");
+      }
+      
+      alert("Registro excluído com sucesso!");
+      router.push("/meus-registros");
+    } catch (err) {
+      alert("Erro ao excluir: " + err.message);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await api.registers.update(params.id, formData);
+      
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar registro");
+      }
+      
+      alert("Registro atualizado com sucesso!");
+      setEditando(false);
+      buscarRegistro();
+    } catch (err) {
+      alert("Erro ao atualizar: " + err.message);
+    }
+  };
+
+  const formatarData = (dataStr) => {
+    const data = new Date(dataStr);
     return data.toLocaleDateString('pt-BR', {
-      weekday: 'long',
-      year: 'numeric',
+      day: '2-digit',
       month: 'long',
-      day: 'numeric'
+      year: 'numeric'
     });
   };
 
-  const formatarDataCurta = (dataString) => {
-    const data = new Date(dataString + 'T00:00:00');
-    return data.toLocaleDateString('pt-BR');
-  };
-
-  useEffect(() => {
-    const id = parseInt(params.id);
-    const registroEncontrado = registrosMock.find(r => r.id === id);
-    setRegistro(registroEncontrado);
-  }, [params.id]);
-
-  const navegarParaRegistro = (direction) => {
-    const currentIndex = registrosMock.findIndex(r => r.id === registro.id);
-    let newIndex;
-    
-    if (direction === 'previous') {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : registrosMock.length - 1;
-    } else {
-      newIndex = currentIndex < registrosMock.length - 1 ? currentIndex + 1 : 0;
-    }
-    
-    router.push(`/meus-registros/${registrosMock[newIndex].id}`);
-  };
-
-  if (!registro) {
-    return (
-      <div className={styles.containerLoading}>
-        <HeaderDashboard currentPage="registros" />
-        <main className={styles.mainRegistro}>
-          <div className={styles.loading}>
-            <h2>Registro não encontrado</h2>
-            <button 
-              onClick={() => router.push('/meus-registros')}
-              className={styles.backButtonRegistro}
-            >
-              Voltar aos registros
-            </button>
-          </div>
-        </main>
-        <Footer />
+  if (loading) return (
+    <div className={styles.container}>
+      <div className={styles.loading}>
+        <h2>Carregando...</h2>
       </div>
-    );
-  }
+    </div>
+  );
+  
+  if (error) return (
+    <div className={styles.container}>
+      <div className={styles.error}>
+        <h2>Erro</h2>
+        <p>{error}</p>
+        <Link href="/meus-registros" className={styles.backLink}>← Voltar aos registros</Link>
+      </div>
+    </div>
+  );
+  
+  if (!registro) return null;
+
+  const humorAtual = humores.find(h => h.id === registro.moodLevel);
 
   return (
     <div className={styles.container}>
-      <HeaderDashboard currentPage="registros" />
-      
-      <div className={styles.moonImage}>
-        <img src="/images/lua-cheia.png" alt="Lua" className={styles.decorativeImage} />
-      </div>
-      
-      <div className={styles.sunImage}>
-        <img src="/images/sol.png" alt="Sol" className={styles.decorativeImage} />
+      <div className={styles.header}>
+        <Link href="/meus-registros" className={styles.backButton}>← Voltar</Link>
+        <h1 className={styles.title}>Detalhes do Registro</h1>
       </div>
 
-      <main className={styles.main}>
-        <section className={styles.headerSection}>
-          <h1 className={styles.title}>Detalhes do Registro</h1>
-          <p className={styles.subtitle}>{formatarData(registro.data)}</p>
-        </section>
-
-        <section className={styles.detailsCard}>
-          <div 
-            className={styles.cardHeader}
-            style={{ backgroundColor: getHumorColor(registro.humor.id) }}
-          >
+      {!editando ? (
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
             <div className={styles.dateInfo}>
-              <span className={styles.dateDay}>
-                {formatarDataCurta(registro.data)}
-              </span>
+              <h2 className={styles.dateTitle}>{formatarData(registro.date)}</h2>
+              <p className={styles.timeInfo}>Registro de humor e sono</p>
+            </div>
+            <div className={styles.actions}>
+              <button onClick={() => setEditando(true)} className={styles.editButton}>Editar</button>
+              <button onClick={handleDelete} className={styles.deleteButton}>Excluir</button>
             </div>
           </div>
 
           <div className={styles.cardContent}>
-            <div className={styles.moodSection}>
-              <h3 className={styles.sectionTitle}>Como você se sentiu</h3>
-              <div className={styles.moodDisplay}>
-                <span className={styles.moodEmoji}>{registro.humor.emoji}</span>
-                <div className={styles.moodInfo}>
-                  <span className={styles.moodLabel}>{registro.humor.label}</span>
-                  <div 
-                    className={styles.moodIndicator}
-                    style={{ backgroundColor: getHumorColor(registro.humor.id) }}
-                  ></div>
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Humor</span>
+                <div className={styles.infoValue}>
+                  <div className={styles.moodDisplay}>
+                    <span className={styles.moodEmoji}>{humorAtual.emoji}</span>
+                    <span className={styles.moodText}>{humorAtual.label}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.infoItem}>
+                <span className={styles.infoLabel}>Horas de sono</span>
+                <div className={styles.infoValue}>
+                  {Math.floor(registro.sleepHours)}h {Math.round((registro.sleepHours % 1) * 60)}min
                 </div>
               </div>
             </div>
 
-            <div className={styles.sleepSection}>
-              <h3 className={styles.sectionTitle}>Qualidade do sono</h3>
-              <div className={styles.sleepDisplay}>
-                <span className={styles.sleepIcon}>😴</span>
-                <span className={styles.sleepValue}>{registro.sono}</span>
-              </div>
-            </div>
-
-            {registro.observacoes && (
+            {registro.notes && (
               <div className={styles.notesSection}>
-                <h3 className={styles.sectionTitle}>Suas anotações</h3>
+                <span className={styles.notesLabel}>Observações</span>
                 <div className={styles.notesContent}>
-                  <p>{registro.observacoes}</p>
+                  {registro.notes}
                 </div>
               </div>
             )}
           </div>
-        </section>
+        </div>
+      ) : (
+        <div className={`${styles.card} ${styles.editMode}`}>
+          <div className={styles.cardHeader}>
+            <div className={styles.dateInfo}>
+              <h2 className={styles.dateTitle}>Editando Registro</h2>
+              <p className={styles.timeInfo}>Faça as alterações necessárias</p>
+            </div>
+          </div>
 
-        <section className={styles.actionRow}>
-          <button
-            onClick={() => router.push('/meus-registros')}
-            className={styles.backSmall}
-          >
-            ← Voltar ao histórico
-          </button>
+          <div className={styles.cardContent}>
+            <form className={styles.editForm}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Data</label>
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  className={styles.formInput}
+                />
+              </div>
 
-          <button
-            onClick={() => router.push(`/meus-registros/${registro.id}/editar`)}
-            className={styles.editButton}
-          >
-            Editar registro
-          </button>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Humor</label>
+                <div className={styles.moodSelector}>
+                  {humores.map(humor => (
+                    <button
+                      key={humor.id}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, moodLevel: humor.id })}
+                      className={`${styles.moodOption} ${formData.moodLevel === humor.id ? styles.selected : ''}`}
+                    >
+                      <span className={styles.moodEmoji}>{humor.emoji}</span>
+                      <span className={styles.moodLabel}>{humor.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <button
-            onClick={() => {
-              if (confirm('Deseja realmente excluir este registro?')) {
-                // Em produção, chamar API para deletar. Aqui só navega de volta
-                alert('Registro excluído (mock)');
-                router.push('/meus-registros');
-              }
-            }}
-            className={styles.deleteButton}
-          >
-            Excluir registro
-          </button>
-        </section>
-      </main>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Horas de sono</label>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="24"
+                  value={formData.sleepHours}
+                  onChange={(e) => setFormData({ ...formData, sleepHours: parseFloat(e.target.value) })}
+                  className={styles.formInput}
+                />
+              </div>
 
-      <Footer />
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Observações</label>
+                <textarea
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  className={styles.formTextarea}
+                  rows="4"
+                  maxLength="200"
+                  placeholder="Adicione suas observações aqui..."
+                />
+                <small style={{ fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }}>
+                  {formData.notes.length}/200 caracteres
+                </small>
+              </div>
+
+              <div className={styles.editActions}>
+                <button type="button" onClick={handleUpdate} className={styles.saveButton}>
+                  Salvar Alterações
+                </button>
+                <button type="button" onClick={() => setEditando(false)} className={styles.cancelButton}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

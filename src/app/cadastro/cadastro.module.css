@@ -119,6 +119,17 @@
   text-decoration: underline;
 }
 
+.errorMessage {
+  background-color: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #fcc;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .sunImage {
   position: absolute;
   top: -70px;

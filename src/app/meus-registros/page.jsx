@@ -1,43 +1,50 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import HeaderDashboard from "../components/HeaderDashboard";
+import HeaderDashboard from "../components/HeaderDashboard/HeaderDashboard";
 import Footer from "../components/Footer/Footer";
+import { api } from "../../../lib/api";
 import styles from "./meus-registros.module.css";
 
 export default function MeusRegistros() {
   const [registros, setRegistros] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
 
   const fetchRegistros = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${apiURL}/register`);
+
+      console.log("➡️ Buscando registros via API");
+      const response = await api.registers.getAll();
+
       if (!response.ok) {
-        // Não lançar: tratamos aqui para mostrar mensagem amigável com status
         const status = response.status;
         setError(`Não foi possível carregar os registros (Status ${status}).`);
         setRegistros([]);
         return;
       }
+
       const data = await response.json();
-      console.log('🔍 Dados recebidos da API:', data);
+      console.log("🔍 Dados recebidos da API:", data);
+
       if (data && data.length > 0) {
-        console.log('📋 Primeiro registro:', data[0]);
-        console.log('🔑 Chaves do primeiro registro:', Object.keys(data[0]));
+        console.log("📋 Primeiro registro:", data[0]);
+        console.log("🔑 Chaves do primeiro registro:", Object.keys(data[0]));
       }
-      
+
       // Normalizar os dados para o formato esperado
-      const registrosNormalizados = Array.isArray(data) ? data.map(normalizeRegistro) : [];
-      console.log('📝 Registros normalizados:', registrosNormalizados);
+      const registrosNormalizados = Array.isArray(data)
+        ? data.map(normalizeRegistro)
+        : [];
+      console.log("📝 Registros normalizados:", registrosNormalizados);
       setRegistros(registrosNormalizados);
     } catch (err) {
       console.error("Erro ao buscar registros:", err);
-      setError("Não foi possível carregar os registros. Verifique sua conexão.");
+      setError(
+        "Não foi possível carregar os registros. Verifique sua conexão."
+      );
       setRegistros([]);
     } finally {
       setLoading(false);
@@ -46,52 +53,55 @@ export default function MeusRegistros() {
 
   useEffect(() => {
     fetchRegistros();
-  }, [apiURL]);
+  }, []);
 
   // Função para normalizar registros da API para formato esperado
   const normalizeRegistro = (registro) => {
-    // Mapear possíveis campos da API
-    const id = registro.id || registro._id || Math.random();
-    const data = registro.date || registro.data || registro.createdAt || new Date().toISOString();
-    
-    // Mapear humor/mood
-    let humorId = registro.moodLevel || registro.mood || registro.humor?.id || 3;
-    if (typeof humorId === 'string') humorId = parseInt(humorId);
-    
-    const humorEmojis = { 1: '😡', 2: '😔', 3: '😐', 4: '😊', 5: '😍' };
-    const humorLabels = { 1: 'Irritado', 2: 'Triste', 3: 'Neutro', 4: 'Feliz', 5: 'Muito feliz' };
-    
-    // Mapear sono
-    let sono = registro.sleepHours || registro.sono || registro.sleep || registro.horasSono;
-    if (typeof sono === 'number') sono = `${sono}h`;
-    if (!sono || sono === 'undefined') sono = '-';
-    
-    // Mapear observações
-    const observacoes = registro.notes || registro.observacoes || registro.observation || '';
-    
+    const id = registro.id;
+    const data = registro.date || new Date().toISOString();
+
+    // Mapear humor
+    const humorId = registro.moodLevel || 3;
+    const humorEmojis = { 1: "😡", 2: "😔", 3: "😐", 4: "😊", 5: "😍" };
+    const humorLabels = {
+      1: "Irritado",
+      2: "Triste",
+      3: "Neutro",
+      4: "Feliz",
+      5: "Muito feliz",
+    };
+
+    // Mapear sono - mantém como número
+    const sleepHours = registro.sleepHours || 0;
+    const horasInteiras = Math.floor(sleepHours);
+    const minutos = Math.round((sleepHours % 1) * 60);
+    const sonoFormatado =
+      minutos > 0 ? `${horasInteiras}h ${minutos}min` : `${horasInteiras}h`;
+
     return {
       id,
       data,
-      sono,
-      observacoes,
+      sono: sonoFormatado,
+      sleepHours: sleepHours, // mantém o número original para filtros
+      observacoes: registro.notes || "",
       humor: {
         id: humorId,
-        emoji: humorEmojis[humorId] || '😐',
-        label: humorLabels[humorId] || 'Neutro'
-      }
+        emoji: humorEmojis[humorId],
+        label: humorLabels[humorId],
+      },
     };
   };
 
   // Função para obter a cor baseada no humor
   const getHumorColor = (humorId) => {
     const cores = {
-      1: '#E57373', // Bravo - Rosa suave (harmonia com roxo)
-      2: '#B39DDB', // Triste - Lilás claro (harmonia com #AEA2FC)
-      3: '#D1C4E9', // Neutro - Roxo muito claro
-      4: '#FFD700', // Feliz - Amarelo do projeto
-      5: '#AEA2FC'  // Apaixonado - Roxo principal do projeto
+      1: "#E57373", // Bravo - Rosa suave (harmonia com roxo)
+      2: "#B39DDB", // Triste - Lilás claro (harmonia com #AEA2FC)
+      3: "#D1C4E9", // Neutro - Roxo muito claro
+      4: "#FFD700", // Feliz - Amarelo do projeto
+      5: "#AEA2FC", // Apaixonado - Roxo principal do projeto
     };
-    return cores[humorId] || '#D1C4E9';
+    return cores[humorId] || "#D1C4E9";
   };
 
   // registros será preenchido pela API (via useEffect)
@@ -109,7 +119,7 @@ export default function MeusRegistros() {
     { id: 2, emoji: "😔", label: "Triste" },
     { id: 3, emoji: "😐", label: "Neutro" },
     { id: 4, emoji: "😊", label: "Feliz" },
-    { id: 5, emoji: "😍", label: "Muito feliz" }
+    { id: 5, emoji: "😍", label: "Muito feliz" },
   ];
 
   // Função para filtrar registros
@@ -119,7 +129,7 @@ export default function MeusRegistros() {
     // Filtro por data
     const hoje = new Date();
     if (filtroData !== "todos") {
-      resultado = resultado.filter(registro => {
+      resultado = resultado.filter((registro) => {
         const dataRegistro = new Date(registro.data);
         const diffTime = hoje.getTime() - dataRegistro.getTime();
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -139,19 +149,21 @@ export default function MeusRegistros() {
 
     // Filtro por humor
     if (filtroHumor !== "todos") {
-      resultado = resultado.filter(registro => registro.humor.id === parseInt(filtroHumor));
+      resultado = resultado.filter(
+        (registro) => registro.humor.id === parseInt(filtroHumor)
+      );
     }
 
     // Filtro por sono
     if (filtroSono !== "todos") {
-      resultado = resultado.filter(registro => {
-        const horas = parseFloat(registro.sono.replace(/[^0-9.]/g, ''));
+      resultado = resultado.filter((registro) => {
+        const horas = registro.sleepHours; // usa o número direto
         switch (filtroSono) {
-          case "pouco": // menos de 6h
+          case "pouco":
             return horas < 6;
-          case "ideal": // 6-8h
+          case "ideal":
             return horas >= 6 && horas <= 8;
-          case "muito": // mais de 8h
+          case "muito":
             return horas > 8;
           default:
             return true;
@@ -171,13 +183,14 @@ export default function MeusRegistros() {
 
   // Calcular estatísticas
   const estatisticas = useMemo(() => {
-    if (registrosFiltrados.length === 0) return { humorMedio: "😐", mediaSono: "0h", diasRegistrados: 0 };
+    if (registrosFiltrados.length === 0)
+      return { humorMedio: "😐", mediaSono: "0h", diasRegistrados: 0 };
 
     // Humor mais comum (protegendo registros com shape inesperado)
     const contadorHumor = {};
-    registrosFiltrados.forEach(r => {
+    registrosFiltrados.forEach((r) => {
       const humorId = r?.humor?.id;
-      if (typeof humorId === 'number' || typeof humorId === 'string') {
+      if (typeof humorId === "number" || typeof humorId === "string") {
         const key = String(humorId);
         contadorHumor[key] = (contadorHumor[key] || 0) + 1;
       }
@@ -186,46 +199,52 @@ export default function MeusRegistros() {
     let humorMedio = "😐";
     const humorKeys = Object.keys(contadorHumor);
     if (humorKeys.length > 0) {
-      const humorMaisComum = humorKeys.reduce((a, b) => 
+      const humorMaisComum = humorKeys.reduce((a, b) =>
         contadorHumor[a] > contadorHumor[b] ? a : b
       );
-      humorMedio = humores.find(h => String(h.id) === humorMaisComum)?.emoji || "😐";
+      humorMedio =
+        humores.find((h) => String(h.id) === humorMaisComum)?.emoji || "😐";
     }
 
     // Média de sono (soma apenas registros com campo sono válido)
     const sonoValidos = registrosFiltrados
-      .map(r => {
+      .map((r) => {
         try {
-          return parseFloat(String(r.sono).replace(/[^0-9.]/g, '')) || 0;
+          return parseFloat(String(r.sono).replace(/[^0-9.]/g, "")) || 0;
         } catch {
           return 0;
         }
       })
-      .filter(h => !Number.isNaN(h));
+      .filter((h) => !Number.isNaN(h));
 
     const totalSono = sonoValidos.reduce((acc, h) => acc + h, 0);
-    const mediaSonoNum = sonoValidos.length > 0 ? Math.round((totalSono / sonoValidos.length) * 10) / 10 : 0;
+    const mediaSonoNum =
+      sonoValidos.length > 0
+        ? Math.round((totalSono / sonoValidos.length) * 10) / 10
+        : 0;
 
     return {
       humorMedio,
-      mediaSono: `${Math.floor(mediaSonoNum)}h ${Math.round((mediaSonoNum % 1) * 60)}min`,
-      diasRegistrados: registrosFiltrados.length
+      mediaSono: `${Math.floor(mediaSonoNum)}h ${Math.round(
+        (mediaSonoNum % 1) * 60
+      )}min`,
+      diasRegistrados: registrosFiltrados.length,
     };
   }, [registrosFiltrados]);
 
   const formatarData = (dataStr) => {
     const data = new Date(dataStr);
-    return data.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
+    return data.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
     });
   };
 
   return (
     <div className={styles.container}>
-      <HeaderDashboard currentPage="registros" />
-      
+      <HeaderDashboard />
+
       <div className={styles.sunImage}>
         <img
           src="/images/sol.png"
@@ -235,7 +254,7 @@ export default function MeusRegistros() {
           className={styles.decorativeImage}
         />
       </div>
-      
+
       <div className={styles.moonImage}>
         <img
           src="/images/lua-cheia.png"
@@ -255,18 +274,20 @@ export default function MeusRegistros() {
         {error && (
           <div className={styles.centerMessage}>
             <p className={styles.errorText}>{error}</p>
-            <button 
+            <button
               onClick={fetchRegistros}
               className={styles.retryButton}
               disabled={loading}
             >
-              {loading ? 'Carregando...' : 'Tentar novamente'}
+              {loading ? "Carregando..." : "Tentar novamente"}
             </button>
           </div>
         )}
         <section className={styles.headerSection}>
           <h1 className={styles.title}>Seu histórico de bem-estar</h1>
-          <p className={styles.subtitle}>Acompanhe sua evolução de humor e sono ao longo do tempo</p>
+          <p className={styles.subtitle}>
+            Acompanhe sua evolução de humor e sono ao longo do tempo
+          </p>
         </section>
 
         {/* Estatísticas */}
@@ -274,11 +295,13 @@ export default function MeusRegistros() {
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Humor médio da semana</div>
             <div className={styles.statValue}>
-              <span className={styles.statEmoji}>{estatisticas.humorMedio}</span>
+              <span className={styles.statEmoji}>
+                {estatisticas.humorMedio}
+              </span>
               <span>Bom humor</span>
             </div>
           </div>
-          
+
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Média de horas de sono</div>
             <div className={styles.statValue}>
@@ -286,7 +309,7 @@ export default function MeusRegistros() {
               <span>{estatisticas.mediaSono}</span>
             </div>
           </div>
-          
+
           <div className={styles.statCard}>
             <div className={styles.statLabel}>Dias registrados</div>
             <div className={styles.statValue}>
@@ -301,8 +324,8 @@ export default function MeusRegistros() {
           <div className={styles.filtersGrid}>
             <div className={styles.filterGroup}>
               <label className={styles.filterLabel}>Período:</label>
-              <select 
-                value={filtroData} 
+              <select
+                value={filtroData}
                 onChange={(e) => setFiltroData(e.target.value)}
                 className={styles.filterSelect}
               >
@@ -315,12 +338,12 @@ export default function MeusRegistros() {
 
             <div className={styles.filterGroup}>
               <label className={styles.filterLabel}>Humor:</label>
-              <select 
-                value={filtroHumor} 
+              <select
+                value={filtroHumor}
                 onChange={(e) => setFiltroHumor(e.target.value)}
                 className={styles.filterSelect}
               >
-                {humores.map(humor => (
+                {humores.map((humor) => (
                   <option key={humor.id} value={humor.id}>
                     {humor.emoji} {humor.label}
                   </option>
@@ -330,8 +353,8 @@ export default function MeusRegistros() {
 
             <div className={styles.filterGroup}>
               <label className={styles.filterLabel}>Sono:</label>
-              <select 
-                value={filtroSono} 
+              <select
+                value={filtroSono}
                 onChange={(e) => setFiltroSono(e.target.value)}
                 className={styles.filterSelect}
               >
@@ -344,8 +367,8 @@ export default function MeusRegistros() {
 
             <div className={styles.filterGroup}>
               <label className={styles.filterLabel}>Ordenar:</label>
-              <select 
-                value={ordenacao} 
+              <select
+                value={ordenacao}
                 onChange={(e) => setOrdenacao(e.target.value)}
                 className={styles.filterSelect}
               >
@@ -356,7 +379,8 @@ export default function MeusRegistros() {
           </div>
 
           <div className={styles.resultsInfo}>
-            Mostrando {registrosFiltrados.length} de {registros.length} registros
+            Mostrando {registrosFiltrados.length} de {registros.length}{" "}
+            registros
           </div>
         </section>
 
@@ -365,7 +389,7 @@ export default function MeusRegistros() {
           {registrosFiltrados.length === 0 ? (
             <div className={styles.noRecords}>
               <p>Nenhum registro encontrado com os filtros aplicados.</p>
-              <button 
+              <button
                 onClick={() => {
                   setFiltroData("todos");
                   setFiltroHumor("todos");
@@ -377,7 +401,7 @@ export default function MeusRegistros() {
               </button>
             </div>
           ) : (
-            registrosFiltrados.map(registro => (
+            registrosFiltrados.map((registro) => (
               <Link
                 key={registro.id}
                 href={`/meus-registros/${registro.id}`}
@@ -385,17 +409,17 @@ export default function MeusRegistros() {
               >
                 {(() => {
                   const humorId = registro?.humor?.id ?? null;
-                  const humorEmoji = registro?.humor?.emoji ?? '😐';
-                  const humorLabel = registro?.humor?.label ?? 'Sem informação';
-                  const sonoText = registro?.sono ?? '-';
+                  const humorEmoji = registro?.humor?.emoji ?? "😐";
+                  const humorLabel = registro?.humor?.label ?? "Sem informação";
+                  const sonoText = registro?.sono ?? "-";
                   const borderColor = getHumorColor(humorId);
 
                   return (
-                    <div 
+                    <div
                       className={styles.recordCard}
                       style={{ borderLeft: `4px solid ${borderColor}` }}
                     >
-                      <div 
+                      <div
                         className={styles.recordDate}
                         style={{ backgroundColor: borderColor }}
                       >
@@ -412,8 +436,12 @@ export default function MeusRegistros() {
                         </div>
                         {registro.observacoes && (
                           <div className={styles.recordNotes}>
-                            <span className={styles.notesLabel}>Observações:</span>
-                            <span className={styles.notesText}>{registro.observacoes}</span>
+                            <span className={styles.notesLabel}>
+                              Observações:
+                            </span>
+                            <span className={styles.notesText}>
+                              {registro.observacoes}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -426,8 +454,7 @@ export default function MeusRegistros() {
         </section>
 
         <div className={styles.actionSection}>
-          <Link className={styles.newRecordBtn}
-            href="/dashboard">
+          <Link className={styles.newRecordBtn} href="/dashboard">
             Registrar novo dia
           </Link>
         </div>

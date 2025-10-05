@@ -143,3 +143,14 @@
   width: 100% !important;
   height: auto !important;
 }
+
+.errorMessage {
+  background-color: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #fcc;
+  font-size: 14px;
+  font-weight: 400;
+}
