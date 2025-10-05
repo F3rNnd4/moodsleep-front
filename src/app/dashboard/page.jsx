@@ -27,11 +27,22 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    loadRegisters();
+    let isMounted = true;
+    
+    if (isMounted) {
+      loadRegisters();
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadRegisters = async () => {
     try {
+      setLoading(true);
+      setError('');
+      
       const response = await api.registers.getAll();
       const data = await response.json();
       
@@ -40,7 +51,11 @@ export default function Dashboard() {
         const recentRegisters = data
           .sort((a, b) => new Date(b.date) - new Date(a.date))
           .slice(0, 3);
-        setRegisters(recentRegisters);
+        
+        // Timeout para evitar problemas de DOM
+        setTimeout(() => {
+          setRegisters(recentRegisters);
+        }, 100);
       } else {
         setError('Erro ao carregar registros');
       }
@@ -48,7 +63,9 @@ export default function Dashboard() {
       console.error('Erro ao carregar registros:', error);
       setError('Erro de conexão');
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
   };
 
@@ -90,8 +107,11 @@ export default function Dashboard() {
     setSubmitError(null);
     setSubmitting(true);
 
+    // Corrigindo problema da data - mantendo a data local sem conversão de fuso horário
+    const localDate = new Date(dateInput + 'T12:00:00'); // Adicionando meio-dia para evitar problemas de fuso
+    
     const registerData = {
-      date: new Date(dateInput).toISOString(),
+      date: localDate.toISOString(),
       moodLevel: selectedMood,
       sleepHours: parseFloat(sleepHours),
       notes: notes,
@@ -102,15 +122,25 @@ export default function Dashboard() {
       const response = await api.registers.create(registerData);
       
       if (response.ok) {
-        // Reset do formulário
-        setSelectedMood(null);
-        setSleepHours("");
-        setNotes("");
-        setDateInput(new Date().toISOString().slice(0, 10));
+        // Reset do formulário com timeout para evitar problemas de DOM
+        setTimeout(() => {
+          setSelectedMood(null);
+          setSleepHours("");
+          setNotes("");
+          setDateInput(new Date().toISOString().slice(0, 10));
+        }, 100);
 
         alert("Registro salvo com sucesso!");
-        loadRegisters(); // Atualizar registros recentes
-        router.push("/meus-registros");
+        
+        // Recarregar registros com timeout
+        setTimeout(() => {
+          loadRegisters();
+        }, 200);
+        
+        // Navegação com timeout para evitar erro de DOM
+        setTimeout(() => {
+          router.push("/meus-registros");
+        }, 500);
       } else {
         const result = await response.json();
         setSubmitError(result.error || 'Erro ao salvar registro');
@@ -119,7 +149,9 @@ export default function Dashboard() {
       console.error('Erro ao enviar registro:', err);
       setSubmitError('Erro de conexão. Tente novamente.');
     } finally {
-      setSubmitting(false);
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 300);
     }
   };
 
