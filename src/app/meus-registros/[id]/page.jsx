@@ -28,14 +28,22 @@ export default function DetalhesRegistro() {
   ];
 
   useEffect(() => {
-    if (params.id) {
+    let isMounted = true;
+    
+    if (params.id && isMounted) {
       buscarRegistro();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [params.id]);
 
   const buscarRegistro = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const response = await api.registers.getById(params.id);
       
       if (!response.ok) {
@@ -43,6 +51,8 @@ export default function DetalhesRegistro() {
       }
       
       const data = await response.json();
+      
+      // Verificar se o componente ainda está montado antes de atualizar o estado
       setRegistro(data);
       
       setFormData({
@@ -64,6 +74,7 @@ export default function DetalhesRegistro() {
     }
 
     try {
+      setLoading(true);
       const response = await api.registers.delete(params.id);
       
       if (!response.ok) {
@@ -71,14 +82,20 @@ export default function DetalhesRegistro() {
       }
       
       alert("Registro excluído com sucesso!");
-      router.push("/meus-registros");
+      
+      // Usar setTimeout para evitar problemas de navegação
+      setTimeout(() => {
+        router.push("/meus-registros");
+      }, 100);
     } catch (err) {
       alert("Erro ao excluir: " + err.message);
+      setLoading(false);
     }
   };
 
   const handleUpdate = async () => {
     try {
+      setLoading(true);
       const response = await api.registers.update(params.id, formData);
       
       if (!response.ok) {
@@ -87,9 +104,14 @@ export default function DetalhesRegistro() {
       
       alert("Registro atualizado com sucesso!");
       setEditando(false);
-      buscarRegistro();
+      
+      // Aguardar um pouco antes de recarregar para evitar conflitos
+      setTimeout(() => {
+        buscarRegistro();
+      }, 100);
     } catch (err) {
       alert("Erro ao atualizar: " + err.message);
+      setLoading(false);
     }
   };
 
@@ -120,9 +142,17 @@ export default function DetalhesRegistro() {
     </div>
   );
   
-  if (!registro) return null;
+  if (!registro) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <h2>Carregando registro...</h2>
+        </div>
+      </div>
+    );
+  }
 
-  const humorAtual = humores.find(h => h.id === registro.moodLevel);
+  const humorAtual = humores.find(h => h.id === registro.moodLevel) || humores[2]; // Default para neutro
 
   return (
     <div className={styles.container}>
