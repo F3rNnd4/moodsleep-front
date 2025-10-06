@@ -21,7 +21,7 @@ export default function Header() {
 
         <nav className={styles.nav}>
           <Link href="/dashboard" className={styles.navLink}>
-            Home
+            Dashboard
           </Link>
           <Link href="/meus-registros" className={styles.navLink}>
             Meus Registros

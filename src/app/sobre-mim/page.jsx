@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import HeaderDashboard from "../components/HeaderDashboard/HeaderDashboard";
 import Image from "next/image";
@@ -6,12 +7,13 @@ import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./sobre-mim.module.css";
 
-export default function SobreMim() {
+// Componente que usa useSearchParams
+function SobreMimContent() {
   const searchParams = useSearchParams();
   const fromDashboard = searchParams.get('from') === 'dashboard';
 
   return (
-    <div className={styles.container}>
+    <>
       {fromDashboard ? (
         <HeaderDashboard currentPage="sobre-mim" />
       ) : (
@@ -75,7 +77,17 @@ export default function SobreMim() {
           />
         </div>
       </main>
+    </>
+  );
+}
 
+// Componente principal com Suspense
+export default function SobreMim() {
+  return (
+    <div className={styles.container}>
+      <Suspense fallback={<div>Carregando...</div>}>
+        <SobreMimContent />
+      </Suspense>
       <Footer />
     </div>
   );
