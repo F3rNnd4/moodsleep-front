@@ -48,6 +48,54 @@
   font-weight: 400;
 }
 
+/* Tela de Carregamento */
+.loadingSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loadingSpinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(174, 162, 252, 0.2);
+  border-top: 4px solid #AEA2FC;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 2rem;
+}
+
+.loadingTitle {
+  font-family: var(--font-cormorant);
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(90deg, #AEA2FC 0%, #FFD700 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 1rem 0;
+}
+
+.loadingText {
+  font-family: var(--font-poppins);
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  opacity: 0.8;
+}
+
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
 .registryCard {
   background: rgba(255, 255, 255, 0.95);
   padding: 2.5rem;
@@ -309,6 +357,24 @@
   
   .moodEmoji {
     font-size: 1.5rem;
+  }
+
+  /* Carregamento responsivo */
+  .loadingSection {
+    padding: 2rem 1rem;
+  }
+
+  .loadingSpinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .loadingTitle {
+    font-size: 1.5rem;
+  }
+
+  .loadingText {
+    font-size: 0.9rem;
   }
 
   /* Modal responsivo */

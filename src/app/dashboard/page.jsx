@@ -10,9 +10,7 @@ import styles from "./dashboard.module.css";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [registers, setRegisters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   // Simulando nome do usuário - em produção viria do contexto/auth
   const userName = "Nathalia";
@@ -25,48 +23,12 @@ export default function Dashboard() {
     return "Boa noite";
   };
 
+  // Dashboard não precisa carregar registros - apenas exibe o formulário
   useEffect(() => {
-    let isMounted = true;
-    
-    if (isMounted) {
-      loadRegisters();
-    }
-
-    return () => {
-      isMounted = false;
-    };
+    setLoading(false); // Dashboard carrega rapidamente
   }, []);
 
-  const loadRegisters = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      const response = await api.registers.getAll();
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Pega apenas os 3 registros mais recentes para o dashboard
-        const recentRegisters = data
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 3);
-        
-        // Timeout para evitar problemas de DOM
-        setTimeout(() => {
-          setRegisters(recentRegisters);
-        }, 100);
-      } else {
-        setError('Erro ao carregar registros');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar registros:', error);
-      setError('Erro de conexão');
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 200);
-    }
-  };
+
 
   const createRegister = async (registerData) => {
     try {
@@ -155,7 +117,11 @@ export default function Dashboard() {
       <div className={styles.container}>
         <HeaderDashboard currentPage="dashboard" />
         <main className={styles.main}>
-          <div>Carregando...</div>
+          <div className={styles.loadingSection}>
+            <div className={styles.loadingSpinner}></div>
+            <h2 className={styles.loadingTitle}>Carregando Dashboard</h2>
+            <p className={styles.loadingText}>Preparando seu espaço de bem-estar...</p>
+          </div>
         </main>
         <Footer />
       </div>

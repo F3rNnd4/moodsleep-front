@@ -342,6 +342,13 @@
   max-width: 400px;
 }
 
+.centerMessage p {
+  font-family: var(--font-poppins);
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
 .errorText {
   font-family: var(--font-poppins);
   color: #333;
