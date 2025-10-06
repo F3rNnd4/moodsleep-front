@@ -14,6 +14,7 @@ export default function DetalhesRegistro() {
   const [editando, setEditando] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showUpdateSuccessModal, setShowUpdateSuccessModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [formData, setFormData] = useState({
     date: "",
@@ -108,7 +109,7 @@ export default function DetalhesRegistro() {
         throw new Error("Erro ao atualizar registro");
       }
       
-      alert("Registro atualizado com sucesso!");
+      setShowUpdateSuccessModal(true);
       setEditando(false);
       
       // Aguardar um pouco antes de recarregar para evitar conflitos
@@ -116,7 +117,8 @@ export default function DetalhesRegistro() {
         buscarRegistro();
       }, 100);
     } catch (err) {
-      alert("Erro ao atualizar: " + err.message);
+      setModalMessage("Erro ao atualizar: " + err.message);
+      setShowSuccessModal(true);
       setLoading(false);
     }
   };
@@ -294,6 +296,23 @@ export default function DetalhesRegistro() {
           <Link href="/meus-registros" className={styles.backButtonCentered}>
             ← Voltar aos Registros
           </Link>
+        </div>
+      )}
+
+      {/* Modal de Sucesso da Atualização */}
+      {showUpdateSuccessModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.updateSuccessModal}>
+            <div className={styles.updateSuccessIcon}>✓</div>
+            <h3>Atualizado!</h3>
+            <p>Registro atualizado com sucesso</p>
+            <button 
+              onClick={() => setShowUpdateSuccessModal(false)} 
+              className={styles.updateSuccessButton}
+            >
+              OK
+            </button>
+          </div>
         </div>
       )}
 
