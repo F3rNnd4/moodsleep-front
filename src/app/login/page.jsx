@@ -80,8 +80,8 @@ export default function Login() {
 
       <main className={styles.main}>
         <section className={styles.formCard}>
-          <h1 className={styles.title}>Bem-vindo de volta</h1>
-          <p className={styles.subtitle}>Continue sua jornada de bem-estar e sono tranquilo</p>
+          <h1 className={styles.title}>Bem-vindo!</h1>
+          <p className={styles.subtitle}>Inicie sua jornada de bem-estar e sono tranquilo</p>
           
           {error && (
             <div className={styles.errorMessage}>

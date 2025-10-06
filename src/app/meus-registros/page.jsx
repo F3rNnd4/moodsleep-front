@@ -273,7 +273,10 @@ export default function MeusRegistros() {
         )}
         {error && (
           <div className={styles.centerMessage}>
-            <p className={styles.errorText}>{error}</p>
+            <p className={styles.errorText}>
+              Não foi possível carregar os registros. Verifique se o servidor
+              está rodando.
+            </p>
             <button
               onClick={fetchRegistros}
               className={styles.retryButton}
