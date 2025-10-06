@@ -540,6 +540,37 @@
   }
 }
 
+/* Botão de Voltar */
+.backButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.backButtonCentered {
+  background: #FFD700;
+  color: #333;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-family: var(--font-poppins);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButtonCentered:hover {
+  background: #FFC700;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .container {
@@ -625,5 +656,15 @@
   .okModalButton {
     width: 100%;
     min-width: auto;
+  }
+
+  /* Botão de voltar responsivo */
+  .backButtonContainer {
+    margin: 1.5rem 0;
+  }
+
+  .backButtonCentered {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
   }
 }

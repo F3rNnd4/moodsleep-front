@@ -163,7 +163,6 @@ export default function DetalhesRegistro() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Link href="/meus-registros" className={styles.backButton}>← Voltar</Link>
         <h1 className={styles.title}>Detalhes do Registro</h1>
       </div>
 
@@ -286,6 +285,15 @@ export default function DetalhesRegistro() {
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Botão de Voltar Centralizado */}
+      {!editando && (
+        <div className={styles.backButtonContainer}>
+          <Link href="/meus-registros" className={styles.backButtonCentered}>
+            ← Voltar aos Registros
+          </Link>
         </div>
       )}
 
