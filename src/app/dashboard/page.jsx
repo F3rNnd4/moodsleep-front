@@ -99,6 +99,7 @@ export default function Dashboard() {
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 10));
 
   const handleSubmit = async (e) => {
@@ -120,36 +121,32 @@ export default function Dashboard() {
       const response = await api.registers.create(registerData);
       
       if (response.ok) {
-        // Reset do formulário com timeout para evitar problemas de DOM
+        // Mostrar modal imediatamente após sucesso
+        setSubmitting(false);
+        setShowSuccessModal(true);
+        
+        // Reset do formulário após um delay
         setTimeout(() => {
           setSelectedMood(null);
           setSleepHours("");
           setNotes("");
           setDateInput(new Date().toISOString().slice(0, 10));
-        }, 100);
-
-        alert("Registro salvo com sucesso!");
-        
-        // Recarregar registros com timeout
-        setTimeout(() => {
-          loadRegisters();
-        }, 200);
-        
-        // Navegação com timeout para evitar erro de DOM
-        setTimeout(() => {
-          router.push("/meus-registros");
         }, 500);
+        
+        // Esconder modal e navegar
+        setTimeout(() => {
+          setShowSuccessModal(false);
+          router.push("/meus-registros");
+        }, 1800);
       } else {
         const result = await response.json();
         setSubmitError(result.error || 'Erro ao salvar registro');
+        setSubmitting(false);
       }
     } catch (err) {
       console.error('Erro ao enviar registro:', err);
       setSubmitError('Erro de conexão. Tente novamente.');
-    } finally {
-      setTimeout(() => {
-        setSubmitting(false);
-      }, 300);
+      setSubmitting(false);
     }
   };
 
@@ -267,6 +264,17 @@ export default function Dashboard() {
           </form>
         </section>
       </main>
+
+      {/* Modal de Sucesso Simples */}
+      {showSuccessModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.successModal}>
+            <div className={styles.successIcon}>✓</div>
+            <h3>Sucesso!</h3>
+            <p>Registro salvo com sucesso</p>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

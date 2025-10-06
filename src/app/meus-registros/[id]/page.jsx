@@ -12,6 +12,9 @@ export default function DetalhesRegistro() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editando, setEditando] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [formData, setFormData] = useState({
     date: "",
     moodLevel: 3,
@@ -68,27 +71,30 @@ export default function DetalhesRegistro() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm("Tem certeza que deseja excluir este registro?")) {
-      return;
-    }
+  const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
 
+  const confirmDelete = async () => {
     try {
       setLoading(true);
+      setShowDeleteModal(false);
       const response = await api.registers.delete(params.id);
       
       if (!response.ok) {
         throw new Error("Erro ao excluir registro");
       }
       
-      alert("Registro excluído com sucesso!");
+      setModalMessage("Registro excluído com sucesso!");
+      setShowSuccessModal(true);
       
       // Usar setTimeout para evitar problemas de navegação
       setTimeout(() => {
         router.push("/meus-registros");
-      }, 100);
+      }, 2000);
     } catch (err) {
-      alert("Erro ao excluir: " + err.message);
+      setModalMessage("Erro ao excluir: " + err.message);
+      setShowSuccessModal(true);
       setLoading(false);
     }
   };
@@ -279,6 +285,48 @@ export default function DetalhesRegistro() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      {showDeleteModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h3>Confirmar Exclusão</h3>
+            </div>
+            <div className={styles.modalBody}>
+              <p>Tem certeza que deseja excluir este registro?</p>
+              <p className={styles.warningText}>Esta ação não pode ser desfeita.</p>
+            </div>
+            <div className={styles.modalActions}>
+              <button onClick={() => setShowDeleteModal(false)} className={styles.cancelModalButton}>
+                Cancelar
+              </button>
+              <button onClick={confirmDelete} className={styles.deleteModalButton}>
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Sucesso/Erro */}
+      {showSuccessModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h3>{modalMessage.includes("Erro") ? "Erro" : "Sucesso"}</h3>
+            </div>
+            <div className={styles.modalBody}>
+              <p>{modalMessage}</p>
+            </div>
+            <div className={styles.modalActions}>
+              <button onClick={() => setShowSuccessModal(false)} className={styles.okModalButton}>
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}

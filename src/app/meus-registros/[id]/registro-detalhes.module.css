@@ -411,6 +411,135 @@
   background: #e0e0e0;
 }
 
+/* Modais */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  width: 90%;
+  overflow: hidden;
+  animation: scaleIn 0.2s ease-out;
+}
+
+.modalHeader {
+  background: linear-gradient(135deg, #aea2fc 0%, #c7b8ff 100%);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.modalHeader h3 {
+  font-family: var(--font-poppins);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modalBody {
+  padding: 2rem;
+  text-align: center;
+}
+
+.modalBody p {
+  font-family: var(--font-poppins);
+  color: #444;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.warningText {
+  color: #d32f2f !important;
+  font-size: 0.9rem !important;
+  font-weight: 500;
+}
+
+.modalActions {
+  padding: 0 2rem 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.cancelModalButton,
+.deleteModalButton,
+.okModalButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 100px;
+}
+
+.cancelModalButton {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.cancelModalButton:hover {
+  background: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.deleteModalButton {
+  background: linear-gradient(135deg, #ff5252 0%, #f44336 100%);
+  color: white;
+}
+
+.deleteModalButton:hover {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  transform: translateY(-1px);
+}
+
+.okModalButton {
+  background: linear-gradient(135deg, #aea2fc 0%, #c7b8ff 100%);
+  color: white;
+}
+
+.okModalButton:hover {
+  background: linear-gradient(135deg, #9b8dfc 0%, #b8a7ff 100%);
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .container {
@@ -474,5 +603,27 @@
   .saveButton,
   .cancelButton {
     width: 100%;
+  }
+
+  /* Modais responsivos */
+  .modal {
+    max-width: 95%;
+    margin: 1rem;
+  }
+
+  .modalBody {
+    padding: 1.5rem;
+  }
+
+  .modalActions {
+    padding: 0 1.5rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .cancelModalButton,
+  .deleteModalButton,
+  .okModalButton {
+    width: 100%;
+    min-width: auto;
   }
 }

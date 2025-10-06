@@ -210,6 +210,80 @@
   object-fit: contain;
 }
 
+/* Modal Simples */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.successModal {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+}
+
+.successIcon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  margin: 0 auto 1rem;
+  font-weight: bold;
+}
+
+.successModal h3 {
+  font-family: var(--font-poppins);
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.successModal p {
+  font-family: var(--font-poppins);
+  color: #666;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .main {
@@ -234,6 +308,18 @@
   }
   
   .moodEmoji {
+    font-size: 1.5rem;
+  }
+
+  /* Modal responsivo */
+  .successModal {
+    padding: 1.5rem;
+    max-width: 280px;
+  }
+
+  .successIcon {
+    width: 50px;
+    height: 50px;
     font-size: 1.5rem;
   }
 }
