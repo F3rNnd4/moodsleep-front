@@ -1,12 +1,22 @@
+"use client";
+import { useSearchParams } from "next/navigation";
+import HeaderDashboard from "../components/HeaderDashboard/HeaderDashboard";
 import Image from "next/image";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./sobre-mim.module.css";
 
 export default function SobreMim() {
+  const searchParams = useSearchParams();
+  const fromDashboard = searchParams.get('from') === 'dashboard';
+
   return (
     <div className={styles.container}>
-      <Header />
+      {fromDashboard ? (
+        <HeaderDashboard currentPage="sobre-mim" />
+      ) : (
+        <Header />
+      )}
 
       <main className={styles.main}>
         <div className={styles.sunImage}>

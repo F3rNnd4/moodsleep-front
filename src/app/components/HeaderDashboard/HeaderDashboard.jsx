@@ -26,7 +26,7 @@ export default function Header() {
           <Link href="/meus-registros" className={styles.navLink}>
             Meus Registros
           </Link>
-          <Link href="/sobre-mim" className={styles.navLink}>
+          <Link href="/sobre-mim?from=dashboard" className={styles.navLink}>
             Sobre mim
           </Link>
           <Link href="/login" className={styles.navLink}>

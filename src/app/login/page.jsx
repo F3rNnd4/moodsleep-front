@@ -114,10 +114,7 @@ export default function Login() {
             <button type="submit" className={styles.submitButton} disabled={loading}>
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
-            
-            <p className={styles.signupLink}>
-              Não tem conta? <Link href="/cadastro">Cadastre-se aqui</Link>
-            </p>
+
           </form>
         </section>
       </main>

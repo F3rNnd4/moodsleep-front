@@ -16,7 +16,6 @@ export default function Dashboard() {
 
   // Simulando nome do usuário - em produção viria do contexto/auth
   const userName = "Nathalia";
-  const userId = 1; // Temporário - será substituído por autenticação real
   
   // Função para determinar saudação baseada no horário
   const getGreeting = () => {
@@ -114,8 +113,7 @@ export default function Dashboard() {
       date: localDate.toISOString(),
       moodLevel: selectedMood,
       sleepHours: parseFloat(sleepHours),
-      notes: notes,
-      userId: userId
+      notes: notes
     };
 
     try {

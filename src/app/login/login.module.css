@@ -100,25 +100,6 @@
   transform: translateY(-1px);
 }
 
-.signupLink {
-  font-family: var(--font-poppins);
-  font-size: 11px;
-  color: #BBBBBB;
-  margin-top: 1rem;
-  font-weight: 400;
-}
-
-.signupLink a {
-  color: #FFD700;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-.signupLink a:hover {
-  color: #FFC700;
-  text-decoration: underline;
-}
-
 .sunImage {
   position: absolute;
   top: -50px;

@@ -28,7 +28,6 @@ export default function Home() {
             </p>
             
             <div className={styles.buttons}>
-              <Link href="/cadastro" className={styles.primaryButton}>Criar conta</Link>
               <Link href="/login" className={styles.secondaryButton}>Entrar</Link>
             </div>
           </div>

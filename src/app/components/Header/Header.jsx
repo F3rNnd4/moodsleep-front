@@ -26,9 +26,6 @@ export default function Header() {
           <Link href="/sobre-mim" className={styles.navLink}>
             Sobre mim
           </Link>
-          <Link href="/cadastro" className={styles.navLink}>
-            Cadastro
-          </Link>
           <Link href="/login" className={styles.navLink}>
             Login
           </Link>
