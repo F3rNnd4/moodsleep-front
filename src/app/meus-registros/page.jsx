@@ -206,16 +206,17 @@ export default function MeusRegistros() {
         humores.find((h) => String(h.id) === humorMaisComum)?.emoji || "😐";
     }
 
-    // Média de sono (soma apenas registros com campo sono válido)
+    // Média de sono (usa o campo sleepHours que é um número)
     const sonoValidos = registrosFiltrados
       .map((r) => {
         try {
-          return parseFloat(String(r.sono).replace(/[^0-9.]/g, "")) || 0;
+          // Usar sleepHours que já é um número, não a string formatada
+          return typeof r.sleepHours === 'number' ? r.sleepHours : parseFloat(r.sleepHours) || 0;
         } catch {
           return 0;
         }
       })
-      .filter((h) => !Number.isNaN(h));
+      .filter((h) => !Number.isNaN(h) && h > 0);
 
     const totalSono = sonoValidos.reduce((acc, h) => acc + h, 0);
     const mediaSonoNum =
