@@ -103,7 +103,15 @@ export default function DetalhesRegistro() {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const response = await api.registers.update(params.id, formData);
+      
+      const localDate = new Date(formData.date + 'T12:00:00'); // Adicionando meio-dia para evitar problemas de fuso
+      
+      const updatedData = {
+        ...formData,
+        date: localDate.toISOString()
+      };
+      
+      const response = await api.registers.update(params.id, updatedData);
       
       if (!response.ok) {
         throw new Error("Erro ao atualizar registro");
