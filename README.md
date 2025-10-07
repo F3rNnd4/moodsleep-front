@@ -139,6 +139,8 @@ moodsleep-front/
 ```
 Página Inicial
     ↓
+Login (sem autenticação real)
+    ↓
 Dashboard (Criar registro)
     ↓
 Meus Registros (Listar)
@@ -178,15 +180,6 @@ const response = await api.registers.create({
 | 3 | 😐 | Neutro |
 | 4 | 😊 | Feliz |
 | 5 | 😍 | Muito feliz |
-
-
-## 📱 Responsividade
-
-O projeto foi desenvolvido com design responsivo, funcionando em:
-- Desktop (1920px+)
-- Laptop (1366px - 1919px)
-- Tablet (768px - 1365px)
-- Mobile (320px - 767px)
 
 ## 🎨 Design
 
