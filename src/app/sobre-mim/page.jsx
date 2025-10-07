@@ -45,14 +45,20 @@ function SobreMimContent() {
           </div>
           <h2 className={styles.name}>Fernanda Alves Louro</h2>
           <p className={styles.role}>
-            Estudante de Desenvolvimento de Sistemas | Criadora do MoodSleep
-            Tracker
+            Desenvolvedora em formação | Apaixonada por livros e bem-estar
           </p>
           <p className={styles.description}>
-            Sou estudante de Desenvolvimento de Sistemas no SENAI Valinhos e
-            desenvolvi o MoodSleep Tracker como parte do meu projeto individual.
-            Meu objetivo é criar soluções simples e intuitivas que ajudem no
-            bem-estar e na organização do dia a dia.
+            Oi! Eu sou a Fernanda, tenho 18 anos e estudo Desenvolvimento de Sistemas no SENAI Valinhos. 
+          </p>
+          <p className={styles.description}>
+            O MoodSleep Tracker nasceu da minha própria necessidade de entender melhor meus padrões de humor e sono. 
+            Como alguém que valoriza muito o autocuidado e a saúde mental, queria criar algo que fosse genuinamente útil 
+            e não apenas mais um app complicado.
+          </p>
+          <p className={styles.description}>
+            Quando não estou codando, você pode me encontrar lendo romances, ouvindo música ou experimentando 
+            novas receitas na cozinha. Acredito que os melhores projetos surgem quando combinamos nossa paixão 
+            pessoal com conhecimento técnico! 🌙✨
           </p>
           <div className={styles.links}>
             <a href="https://www.linkedin.com/in/fernanda-alves-louro-386966320" className={styles.link} target="_blank" rel="noopener noreferrer">
